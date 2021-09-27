@@ -138,7 +138,7 @@ void RRT::planning()
 
 	std::string manilog = "../manipulationLog.txt";
 	std::ofstream log(manilog, std::ios::app);
-	log << getDatetimeStr();	log << "; ";	log << "Calc time: ";	log << sec;	log << "; ";	log << "Air shot: ";	log << (100.0*real)/all;
+	log << getDatetimeStr();	log << "　";	log << "CalcTime:";	log << sec;	log << "[s]　";	log << "HitRate:";	log << (100.0*real)/all; log << "[%]" << std::endl;
 }
 
 void RRT::WriteToFile()

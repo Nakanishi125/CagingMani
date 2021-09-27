@@ -17,7 +17,7 @@ int main()
 
 	Node node(Linit,Rinit);
 
-	State3D<int> goal(-100, 220, 0);
+	// State3D<int> goal(-100, 220, 0);
 
 	double epsilon = 45;
 
