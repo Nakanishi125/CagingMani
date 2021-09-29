@@ -22,7 +22,6 @@ public:
 protected:
 	Shape();
 
-	Square geometry;
 	State3D<int> center;
 };
 

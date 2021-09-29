@@ -16,15 +16,15 @@ int main()
   	std::vector<double> Rinit = {-60, 40, 50};
 
 	Node node(Linit,Rinit);
-
+	std::vector<double> goal = {37, -22, -39, 21, -31, -27};
 	// State3D<int> goal(-100, 220, 0);
 
-	double epsilon = 45;
+	double epsilon = 5.0;
 
 	Robot* robot = Robot::getInstance();
 	robot->HandSetup(node);
 
-	Algorithm* myAlgo = new RRT(node, goal, epsilon);
+	Algorithm* myAlgo = new RRT(node);
 
 	myAlgo->GeneratePath();
 	myAlgo->WriteToFile();

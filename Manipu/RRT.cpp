@@ -8,11 +8,21 @@
 #include <fstream>
 
 #include "RRT.h"
+#include "ProblemFactory.h"
+#include "GoalCondition.h"
 
 using namespace std::chrono;
 
-RRT::RRT(Node start, State3D<int> goal, double epsilon)
-	:Algorithm(start, goal, epsilon), range(1.0)
+// RRT::RRT(Node start, State3D<int> goal, double epsilon)
+// 	:Algorithm(start, goal, epsilon), range(1.0)
+// {
+// 	graph.push_back(Start);
+// }
+
+Node nownode;
+
+RRT::RRT(Node start)
+	:Algorithm(start), range(1.0)
 {
 	graph.push_back(Start);
 }
@@ -22,19 +32,27 @@ void RRT::planning()
 	auto start = std::chrono::system_clock::now();
 	static int all = 0;
 	static int real = 0;
+	GoalCondition* gc = ProblemFactory::create();
+
 	while(1){
 		++all;
 		// ランダムに点を打つ
 		std::vector<double> Rand(Node::dof);
-		auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
-		std::srand(seed);
-		for(int i=0; i<Node::dof; i++){
+//		if(all%10 != 0){
 			auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
-			std::srand(seed);	
-			Rand[i] = std::rand()%181 - 90;
-		}
+			std::srand(seed);
+			for(int i=0; i<Node::dof; i++){
+				auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
+				std::srand(seed);	
+				Rand[i] = std::rand()%181 - 90;
+			}
+//		}
+		// else{
+		// 	std::cout << "Goal Bias this time" << std::endl;
+		// 	Rand = Goal.node;
+		// }
 
-		Node nownode(Rand);
+		nownode.Update(Rand);
 
 		// 最近傍ノードを探索
 		double dist = DBL_MAX;
@@ -99,17 +117,11 @@ void RRT::planning()
 		graph.push_back(nownode);
 		std::cout << "The number of nodes is:";	std::cout << graph.size() << std::endl;
 
-		static double mini = DBL_MAX;
-		double kyori = config_->toGoal(Goal);
-		if(mini > kyori){
-			mini = kyori;
-		}
-		std::cout << "Now, minimum distance is ";	std::cout << mini << std::endl << std::endl;
-		if(epsilon > kyori)	break;
-
-		// if(epsilon > config_->toGoal(Goal))	break;
+		if(gc->judge())
+			break;
 	}
 
+	delete gc;
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::seconds>(dur).count();

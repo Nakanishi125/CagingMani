@@ -9,8 +9,8 @@ class Rectangle : public Shape
 {
 private:
   	double short_side, long_side;
-
 	static Rectangle* instance;
+	Square geometry;
 
 	Rectangle();
 

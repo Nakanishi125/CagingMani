@@ -21,6 +21,9 @@ public:
 	//　コンストラクタ
 	Node(std::vector<double> Linit, std::vector<double> Rinit);
 	Node(std::vector<double> node_);
+	Node();
+	
+	void Update(std::vector<double> node_);
 
 
 	double distance(Node other);

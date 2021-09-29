@@ -20,15 +20,52 @@ Robot* Robot::getInstance()
 
 void Robot::HandSetup(Node& node)
 {
-	std::vector<int> Lheight = {38, 130, 130, 90};
-	std::vector<int> Lwidth = {60, 35, 35, 35};
-
-	std::vector<int> Rheight = {38, 130, 130, 90};
-	std::vector<int> Rwidth = {60, 35, 35, 35};
-
 	bp::ptree pt;
 	read_ini("../config/RobotConfig.ini", pt);
 
+// Hand size setup	
+	std::vector<int> Lheight(4);
+	std::vector<int> Lwidth(4);
+	std::vector<int> Rheight(4);
+	std::vector<int> Rwidth(4);
+
+	boost::optional<int> carrier = pt.get_optional<int>("size.Lh1");
+	Lheight[0] = carrier.get();
+	carrier = pt.get_optional<int>("size.Lh2");
+	Lheight[1] = carrier.get();
+	carrier = pt.get_optional<int>("size.Lh3");
+	Lheight[2] = carrier.get();
+	carrier = pt.get_optional<int>("size.Lh4");
+	Lheight[3] = carrier.get();
+
+	carrier = pt.get_optional<int>("size.Lw1");
+	Lwidth[0] = carrier.get();
+	carrier = pt.get_optional<int>("size.Lw2");
+	Lwidth[1] = carrier.get();
+	carrier = pt.get_optional<int>("size.Lw3");
+	Lwidth[2] = carrier.get();
+	carrier = pt.get_optional<int>("size.Lw4");
+	Lwidth[3] = carrier.get();
+
+	carrier = pt.get_optional<int>("size.Rh1");
+	Rheight[0] = carrier.get();
+	carrier = pt.get_optional<int>("size.Rh2");
+	Rheight[1] = carrier.get();
+	carrier = pt.get_optional<int>("size.Rh3");
+	Rheight[2] = carrier.get();
+	carrier = pt.get_optional<int>("size.Rh4");
+	Rheight[3] = carrier.get();
+
+	carrier = pt.get_optional<int>("size.Rw1");
+	Rwidth[0] = carrier.get();
+	carrier = pt.get_optional<int>("size.Rw2");
+	Rwidth[1] = carrier.get();
+	carrier = pt.get_optional<int>("size.Rw3");
+	Rwidth[2] = carrier.get();
+	carrier = pt.get_optional<int>("size.Rw4");
+	Rwidth[3] = carrier.get();
+
+// Hand origin setup
 	boost::optional<float> carrier = pt.get_optional<float>("origin.lx");
 	Lorg.x = carrier.get();
 	carrier = pt.get_optional<float>("origin.ly");
@@ -38,6 +75,12 @@ void Robot::HandSetup(Node& node)
 	Rorg.x = carrier.get();
 	carrier = pt.get_optional<float>("origin.ry");
 	Rorg.y = carrier.get();
+
+// Hand coordinate setup
+// 		--        --
+// 		|  00  10  |
+//		|  01  11  |
+// 		--        --
 
 	float p00 = 0.0, p01 = 0.0, p10 = 0.0, p11 = 0.0;
 	carrier = pt.get_optional<float>("coordinate.l00");

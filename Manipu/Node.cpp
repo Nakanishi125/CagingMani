@@ -24,6 +24,17 @@ Node::Node(std::vector<double> node_)
 {
 }
 
+Node::Node()
+    :node(), parent()
+{}
+
+void Node::Update(std::vector<double> node_)
+{
+    node = node_;
+    parent = 0;
+    region.clear();
+}
+
 double Node::distance(Node other)
 {
     double dist = 0.0;

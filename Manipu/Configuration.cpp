@@ -586,6 +586,18 @@ double Configuration::toGoal(State3D<int> goal)
 	return dist;
 }
 
+double Configuration::toGoal(Node start, Node goal)
+{
+	double d = 0.0;
+	for(int i=0; i<Node::dof; i++){
+		d += (start.node[i]-goal.node[i])*(start.node[i]-goal.node[i]);
+	}
+
+	return std::sqrt(d);
+}
+
+
+
 int Configuration::labeling3D(int*** label)
 {
 	// Initialize

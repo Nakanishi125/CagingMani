@@ -25,6 +25,7 @@ public:
 	bool get_C_free_obj(const std::vector<State3D<int>>& last_C_free_obj);
 
 	double toGoal(State3D<int> goal);
+	double toGoal(Node start, Node goal);
 
 	std::vector<State3D<int>> space;
 	std::vector<State3D<int>> C_free_obj;
@@ -49,7 +50,6 @@ private:
 	int search_neighbors(int x, int y, int th, int*** label);
 	void modify_label(int num1, int num2, int*** label);
 };
-
 
 static double distance_of_centers(const Point2D point, const Link link);
 

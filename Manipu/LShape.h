@@ -8,13 +8,11 @@
 class LShape : public Shape
 {
 private:
-  double long_side, short_side, long_pro, short_pro;
-
+  	double long_side, short_side, long_pro, short_pro;
 	static LShape* instance;
+	std::vector<Point2D> vertices;
 
 	LShape();
-
-	Square geometry;
 
 	void getVertices();
 
