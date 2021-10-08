@@ -13,15 +13,14 @@ private:
 	std::vector<Point2D> vertices;
 
 	LShape();
-
-	void getVertices();
+	void setVertices();
 
 public:
 	static Shape* getInstance();
 
 	double getRadius();
 
-	bool Intersection(Square poly);
+	bool Intersect(Square poly);
 
 };
 

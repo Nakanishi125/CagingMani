@@ -23,7 +23,7 @@ Shape* Shape::getInstance()
 	if(sh == 1){
 		instance = Rectangle::getInstance();
 	}
-	else(sh == 2){
+	else if(sh == 2){
 		instance = LShape::getInstance();
 	}
 
@@ -36,10 +36,7 @@ void Shape::setCenterpoint(State3D<int> p)
 	center.x = p.x;
 	center.y = p.y;
 	center.th = p.th;
-}
 
-bool Shape::Intersection(Square poly)
-{
-	return false;
+	setVertices();
 }
 

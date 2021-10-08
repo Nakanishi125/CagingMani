@@ -14,15 +14,13 @@ private:
 
 	Rectangle();
 
-	void getVertices();
+	void setVertices();
 
 public:
 	static Shape* getInstance();
 
+	bool Intersect(Square poly);
 	double getRadius();
-
-	bool Intersection(Square poly);
-
 };
 
 

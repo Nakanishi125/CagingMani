@@ -66,15 +66,15 @@ void Robot::HandSetup(Node& node)
 	Rwidth[3] = carrier.get();
 
 // Hand origin setup
-	boost::optional<float> carrier = pt.get_optional<float>("origin.lx");
-	Lorg.x = carrier.get();
-	carrier = pt.get_optional<float>("origin.ly");
-	Lorg.y = carrier.get();
+	boost::optional<float> carrier2 = pt.get_optional<float>("origin.lx");
+	Lorg.x = carrier2.get();
+	carrier2 = pt.get_optional<float>("origin.ly");
+	Lorg.y = carrier2.get();
 
-	carrier = pt.get_optional<float>("origin.rx");
-	Rorg.x = carrier.get();
-	carrier = pt.get_optional<float>("origin.ry");
-	Rorg.y = carrier.get();
+	carrier2 = pt.get_optional<float>("origin.rx");
+	Rorg.x = carrier2.get();
+	carrier2 = pt.get_optional<float>("origin.ry");
+	Rorg.y = carrier2.get();
 
 // Hand coordinate setup
 // 		--        --
@@ -196,25 +196,25 @@ bool Robot::rrIntersect()
 {
 	for(int i=0; i<Lhand.size(); ++i){
 		for(int j=0; j<Rhand.size(); ++j){
-			if(! Lhand[i].geometry.intersect_square(Rhand[j].geometry) )	return false;
+			if(Lhand[i].geometry.intersect(Rhand[j].geometry))	return true;
 		}
 	}
 	
-	return true;
+	return false;
 }
 
 
 bool Robot::rwIntersect(Wall* wall)
 {
 	for(int i=0; i<Lhand.size(); ++i){
-		if(! Lhand[i].geometry.intersect_square(wall->geometry) )	return false;
+		if( Lhand[i].geometry.intersect(wall->geometry) )	return true;
 	}
 
 	for(int i=0; i<Rhand.size(); ++i){
-		if(! Rhand[i].geometry.intersect_square(wall->geometry) ) return false;
+		if( Rhand[i].geometry.intersect(wall->geometry) ) return true;
 	}
 
-	return true;
+	return false;
 }
 
 Robot* Robot::instance = NULL;

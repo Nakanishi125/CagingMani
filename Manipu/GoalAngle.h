@@ -7,6 +7,8 @@ extern Node nownode;
 class GoalAngle : public GoalCondition
 {
 public:
+    std::vector<double> dest;
+
     GoalAngle()
     :dest(), GoalCondition()
     {
@@ -42,6 +44,4 @@ public:
         return false;
     }
 
-private:
-    std::vector<double> dest;
 };

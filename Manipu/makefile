@@ -2,7 +2,7 @@ TARGET = Manipulation
 
 SRCS =  main.cpp 
 SRCS += Algorithm.cpp Robot.cpp Shape.cpp Configuration.cpp LShape.cpp
-SRCS += Node.cpp RRT.cpp Wall.cpp maniMath.cpp dbscan.cpp Rectangle.cpp
+SRCS += Node.cpp RRT.cpp Wall.cpp maniMath.cpp dbscan.cpp Rectangle.cpp csv.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 CXX = g++

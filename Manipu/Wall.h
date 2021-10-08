@@ -18,13 +18,12 @@ private:
 	double direction;
 
 	Wall()
-		:horizontal(600),vertical(5.0),origin(0.0,-5.001),direction(0.0),
-		 geometry()
+		:horizontal(600),vertical(5.0),origin(0.0,-5.001),direction(0.0), geometry()
 	{
-		getVertices();
+		setVertices();
 	}
 
-	void getVertices();
+	void setVertices();
 
 public:
 	static Wall* getInstance();

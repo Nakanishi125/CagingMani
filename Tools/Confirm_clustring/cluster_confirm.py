@@ -15,7 +15,7 @@ import math
 # In[79]:
 
 while 1:
-    Data = pd.read_csv("../C_free_obj.csv", header=None)
+    Data = pd.read_csv("../../C_free_obj.csv", header=None)
     sec = []
     for i in range(len(Data)):
         if Data.iloc[i,0] == ' ': 

@@ -68,10 +68,8 @@ public:
 		// Point2D p3(p2.x - height*std::sin(radAngle), p2.y + height*std::cos(radAngle));
 		// Point2D p4(p3.x - width*std::cos(radAngle), p3.y - width*std::sin(radAngle));
 
-		geometry.vertices[0] = refPoint;
-		geometry.vertices[1] = p2;
-		geometry.vertices[2] = p3;
-		geometry.vertices[3] = p4;
+		geometry.setVertices(refPoint, p2, p3, p4);
+
 	}
 
 	double getRadius(){

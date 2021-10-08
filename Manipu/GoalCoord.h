@@ -6,6 +6,8 @@ namespace bp = boost::property_tree;
 class GoalCoord : public GoalCondition
 {
 public:
+    State3D<int> dest;
+
     GoalCoord()
     :dest(), GoalCondition()
     {
@@ -34,7 +36,4 @@ public:
         return false;
     }
 
-
-private:
-    State3D<int> dest;
 };

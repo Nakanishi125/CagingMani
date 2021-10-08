@@ -41,13 +41,13 @@ double LShape::getRadius()
 	return sqrt(long_side * long_side + short_side * short_side);
 }
 
-void LShape::getVertices()
+void LShape::setVertices()
 {
 	// State3D<int> center is a center of LShape's circumscribe circle.
 
 }
 
-bool LShape::Intersection(Square poly)
+bool LShape::Intersect(Square poly)
 {
 
 	return true;

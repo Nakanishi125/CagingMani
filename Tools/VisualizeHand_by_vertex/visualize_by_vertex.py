@@ -49,7 +49,7 @@ while(1):
 	for i in range(len(rxlist)):
 		ax.plot(rxlist[i], rylist[i])
 
-	plt.pause(2)
+	plt.pause(2.0)
 	plt.close()
 
 	

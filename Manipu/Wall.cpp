@@ -11,7 +11,7 @@ Wall* Wall::getInstance()
 	return instance;
 }
 
-void Wall::getVertices()
+void Wall::setVertices()
 {
 	double rad = deg_to_rad(direction);
 
@@ -25,8 +25,6 @@ void Wall::getVertices()
 	Point2D p4(p3.x + vertical * std::sin(rad),
 						 p3.y - vertical * std::cos(rad) );
 
-	geometry.vertices[0] = p1;		
-	geometry.vertices[1] = p2;		
-	geometry.vertices[2] = p3;		
-	geometry.vertices[3] = p4;		
+	geometry.setVertices(p1, p2, p3, p4);
+		
 }

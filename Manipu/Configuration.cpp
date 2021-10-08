@@ -114,6 +114,8 @@ void Configuration::get_C_free()
 ////////////////////////////////////////////////////////////////////////////
 // Confirm robot angle 
 // To execute visualize_by_vertex.py, validate below code and output to csv file.
+	std::string fn = "/mnt/c/Users/nakanishi/Desktop/dif.csv";
+	std::ofstream ofs(fn, std::ios::out);
 	std::string fn3 = "../robot_vertex.csv";
 	std::ofstream logR(fn3, std::ios::out);
 	if(cnt % 1 == 0){
@@ -147,10 +149,11 @@ void Configuration::get_C_free()
 
 		// Intersection judge aginst wall
 		if(space[num].y <= shape->getRadius()){
-			AnyCollision = shape->Intersection(wall->geometry);
-			if(!AnyCollision){
+			AnyCollision = shape->Intersect(wall->geometry);
+			if(AnyCollision){
 				//std::cout << "The object collide with wall" << std::endl;
 				C_free[num].flag = false;
+				// ofs << 0 << std::endl;
 				continue;
 			}
 		}
@@ -163,10 +166,11 @@ void Configuration::get_C_free()
 			double distance = distance_of_centers(proj, robot->Lhand[l]);
 			if(distance < (robot->Lhand[l].getRadius() + shape->getRadius()) )
 			{
-				AnyCollision = shape->Intersection(robot->Lhand[l].geometry);
-				if(!AnyCollision){
+				AnyCollision = shape->Intersect(robot->Lhand[l].geometry);
+				if(AnyCollision){
 					//std::cout << "The object collide with left hand" << std::endl;
 					C_free[num].flag = false;
+					// ofs << 0 << std::endl;
 				}
 			}
 		}
@@ -178,22 +182,23 @@ void Configuration::get_C_free()
 			double distance = distance_of_centers(proj, robot->Rhand[r]);
 			if(distance < (robot->Rhand[r].getRadius() + shape->getRadius()) )
 			{
-				AnyCollision = shape->Intersection(robot->Rhand[r].geometry);
-				if(!AnyCollision){
+				AnyCollision = shape->Intersect(robot->Rhand[r].geometry);
+				if(AnyCollision){
 					//std::cout << "The object collide with right hand" << std::endl;
 					C_free[num].flag = false;
+					// ofs << 0 << std::endl;
 				}
 			}
 		}
 		if(!C_free[num].flag)	continue;
-		
+		// ofs << 1 << std::endl;
 	}
 
 
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-	std::cout << "get_C_free [ms]: ";	std::cout << sec <<std::endl;
+	//std::cout << "get_C_free [ms]: ";	std::cout << sec <<std::endl;
 
 ////////////////////////////////////////////////////////
 // "Print C_free"
@@ -315,7 +320,8 @@ bool Configuration::get_clustered_C_free()
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-	std::cout << "get_clustered_C_free [ms]: ";	std::cout << sec <<std::endl;
+	//std::cout << "get_clustered_C_free [ms]: ";	std::cout << sec <<std::endl;
+
 
 	return true;
 
@@ -369,7 +375,7 @@ bool Configuration::get_C_free_ICS()
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-	std::cout << "get_C_free_ICS [ms]: ";	std::cout << sec <<std::endl;
+	//std::cout << "get_C_free_ICS [ms]: ";	std::cout << sec <<std::endl;
 
 	if( clustered_C_free.size() == 0){
 		clustered_C_free.clear();
@@ -377,29 +383,30 @@ bool Configuration::get_C_free_ICS()
 		return false;
 	}
 
+// merge 0[deg] and 360[deg]
 	merge();
+	
 	return true;
 
 }
 
 bool Configuration::get_C_free_obj(const std::vector<State3D<int>>& last_C_free_obj)
 {
-	std::string fn = "../C_free_obj.csv";
-	//=================================================================================================
-	std::ofstream ofs(fn, std::ios::out);
-	for(const auto& last: last_C_free_obj){
-		ofs << last.x;	ofs << ",";	ofs << last.y;	ofs << ",";		ofs << last.th << std::endl;
-	}
-	ofs << " " << "," << " " << "," << " " << std::endl;
-	for(const auto& cc: clustered_C_free){
-		for(const auto& last: cc){
-			ofs << last.x;	ofs << ",";	ofs << last.y;	ofs << ",";		ofs << last.th << std::endl;
-		}
-		ofs << " " << "," << " " << "," << " " << std::endl;
-	}
+	// std::string fn = "../C_free_obj.csv";
+	// //=================================================================================================
+	// std::ofstream ofs(fn, std::ios::out);
+	// for(const auto& last: last_C_free_obj){
+	// 	ofs << last.x;	ofs << ",";	ofs << last.y;	ofs << ",";		ofs << last.th << std::endl;
+	// }
+	// ofs << " " << "," << " " << "," << " " << std::endl;
+	// for(const auto& cc: clustered_C_free){
+	// 	for(const auto& last: cc){
+	// 		ofs << last.x;	ofs << ",";	ofs << last.y;	ofs << ",";		ofs << last.th << std::endl;
+	// 	}
+	// 	ofs << " " << "," << " " << "," << " " << std::endl;
+	// }
 	
-	//================================================================================================
-
+	// //================================================================================================
 
 	auto start = std::chrono::system_clock::now();
 	for(auto itr=clustered_C_free.begin(); itr != clustered_C_free.end();)
@@ -437,7 +444,7 @@ bool Configuration::get_C_free_obj(const std::vector<State3D<int>>& last_C_free_
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-	std::cout << "get_clustered_C_obj [ms] : ";	std::cout << sec << std::endl;
+	//std::cout << "get_clustered_C_obj [ms] : ";	std::cout << sec << std::endl;
 
 	if(clustered_C_free.size() == 0){
 		std::cout << "The number of cluster is 0" <<std::endl;
