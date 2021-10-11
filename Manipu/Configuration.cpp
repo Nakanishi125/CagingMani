@@ -198,7 +198,7 @@ void Configuration::get_C_free()
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-	//std::cout << "get_C_free [ms]: ";	std::cout << sec <<std::endl;
+	// std::cout << "get_C_free [ms]: ";	std::cout << sec <<std::endl;
 
 ////////////////////////////////////////////////////////
 // "Print C_free"
@@ -320,7 +320,7 @@ bool Configuration::get_clustered_C_free()
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-	//std::cout << "get_clustered_C_free [ms]: ";	std::cout << sec <<std::endl;
+	// std::cout << "get_clustered_C_free [ms]: ";	std::cout << sec <<std::endl;
 
 
 	return true;
@@ -375,7 +375,7 @@ bool Configuration::get_C_free_ICS()
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-	//std::cout << "get_C_free_ICS [ms]: ";	std::cout << sec <<std::endl;
+	// std::cout << "get_C_free_ICS [ms]: ";	std::cout << sec <<std::endl;
 
 	if( clustered_C_free.size() == 0){
 		clustered_C_free.clear();
@@ -444,7 +444,7 @@ bool Configuration::get_C_free_obj(const std::vector<State3D<int>>& last_C_free_
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-	//std::cout << "get_clustered_C_obj [ms] : ";	std::cout << sec << std::endl;
+	// std::cout << "get_clustered_C_obj [ms] : ";	std::cout << sec << std::endl;
 
 	if(clustered_C_free.size() == 0){
 		std::cout << "The number of cluster is 0" <<std::endl;

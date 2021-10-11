@@ -40,7 +40,7 @@ void RRT::planning()
 		std::cout << "No.";	std::cout << all << std::endl;
 		// ランダムに点を打つ
 		std::vector<double> Rand(Node::dof);
-		if(all%1 == 0){
+//		if(all%1 == 0){
 			auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
 			std::srand(seed);
 			for(int i=0; i<Node::dof; i++){
@@ -48,24 +48,25 @@ void RRT::planning()
 				std::srand(seed);	
 				Rand[i] = std::rand()%181 - 90;
 			}
-		}
-		else{
-			std::cout << "Goal Bias this time" << std::endl;
-			Rand = dynamic_cast<GoalAngle*>(gc)->dest;
-		}
+//		}
+		// else{
+		// 	std::cout << "Goal Bias this time" << std::endl;
+		// 	Rand = dynamic_cast<GoalAngle*>(gc)->dest;
+		// }
 
-		// static int row = 0;
-		// std::string fn = "../node.csv";		/////////////
-		// Csv csv(fn);
-		// std::vector<std::vector<double>> mat;
-		// csv.getCsvdb(mat, ',');
-		// Rand[0] = mat[row][0];
-		// Rand[1] = mat[row][1];
-		// Rand[2] = mat[row][2];
-		// Rand[3] = mat[row][3];
-		// Rand[4] = mat[row][4];
-		// Rand[5] = mat[row][5];
-		// ++row;
+		static int row = 0;
+		std::string fn = "../../RandNode.csv";		
+		Csv csv(fn);
+		std::vector<std::vector<double>> mat;
+		csv.getCsvdb(mat, ',');
+		Rand[0] = mat[row][0];
+		Rand[1] = mat[row][1];
+		Rand[2] = mat[row][2];
+		Rand[3] = mat[row][3];
+		Rand[4] = mat[row][4];
+		Rand[5] = mat[row][5];
+		++row;
+
 		nownode.Update(Rand);
 
 		// 最近傍ノードを探索
