@@ -25,11 +25,11 @@ Rectangle* Rectangle::instance = nullptr;
 
 Shape* Rectangle::getInstance()
 {
-		if(instance == nullptr) 
-		{
-			instance = new Rectangle();
-		}
-		return instance;
+	if(instance == nullptr) 
+	{
+		instance = new Rectangle();
+	}
+	return instance;
 }
 
 double Rectangle::getRadius()

@@ -14,11 +14,13 @@ public:
 	Triangle()
 		:vertices()
 	{
+		vertices.resize(3);
 	}
 
 	Triangle(Point2D p1, Point2D p2, Point2D p3)
 		:vertices()
 	{
+		vertices.resize(3);
 		vertices[0] = p1;
 		vertices[1] = p2;
 		vertices[2] = p3;
@@ -28,6 +30,13 @@ public:
 		:vertices()
 	{
 		this->vertices = tri.vertices;
+	}
+
+	void setVertices(const Point2D& p1, const Point2D& p2, const Point2D& p3)
+	{
+		vertices[0] = p1;
+		vertices[1] = p2;
+		vertices[2] = p3;
 	}
 
 	//     intersect -> false

@@ -35,37 +35,27 @@ void RRT::planning()
 	static int real = 0;
 	GoalCondition* gc = ProblemFactory::create();
 
+	auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
+	std::srand(1234);
+
 	while(1){
 		++all;
 		std::cout << "No.";	std::cout << all << std::endl;
 		// ランダムに点を打つ
 		std::vector<double> Rand(Node::dof);
-//		if(all%1 == 0){
-			auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
-			std::srand(seed);
+		if(all%1 == 0){
+			// auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
+			// std::srand(seed);
 			for(int i=0; i<Node::dof; i++){
-				auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
-				std::srand(seed);	
+				// auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
+				// std::srand(seed);	
 				Rand[i] = std::rand()%181 - 90;
 			}
-//		}
-		// else{
+		}
+		else{
 		// 	std::cout << "Goal Bias this time" << std::endl;
 		// 	Rand = dynamic_cast<GoalAngle*>(gc)->dest;
-		// }
-
-		static int row = 0;
-		std::string fn = "../../RandNode.csv";		
-		Csv csv(fn);
-		std::vector<std::vector<double>> mat;
-		csv.getCsvdb(mat, ',');
-		Rand[0] = mat[row][0];
-		Rand[1] = mat[row][1];
-		Rand[2] = mat[row][2];
-		Rand[3] = mat[row][3];
-		Rand[4] = mat[row][4];
-		Rand[5] = mat[row][5];
-		++row;
+		}
 
 		nownode.Update(Rand);
 
@@ -170,7 +160,7 @@ void RRT::planning()
 
 void RRT::WriteToFile()
 {
-	std::string fn = "../path.csv";
+	std::string fn = "../path/20211029_LShape.csv";
 	std::ofstream ofs(fn, std::ios::out);
 
 	for(const auto& node: path){

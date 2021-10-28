@@ -320,6 +320,7 @@ bool Configuration::get_clustered_C_free()
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+	std::cout << "The size of clustered_C_free is ";	std::cout << clustered_C_free.size() << std::endl;
 	// std::cout << "get_clustered_C_free [ms]: ";	std::cout << sec <<std::endl;
 
 
@@ -375,6 +376,7 @@ bool Configuration::get_C_free_ICS()
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+	std::cout << "The size of C_free_ICS is ";	std::cout << clustered_C_free.size() << std::endl;
 	// std::cout << "get_C_free_ICS [ms]: ";	std::cout << sec <<std::endl;
 
 	if( clustered_C_free.size() == 0){
@@ -392,8 +394,9 @@ bool Configuration::get_C_free_ICS()
 
 bool Configuration::get_C_free_obj(const std::vector<State3D<int>>& last_C_free_obj)
 {
+	//=================================================================================================
+
 	// std::string fn = "../C_free_obj.csv";
-	// //=================================================================================================
 	// std::ofstream ofs(fn, std::ios::out);
 	// for(const auto& last: last_C_free_obj){
 	// 	ofs << last.x;	ofs << ",";	ofs << last.y;	ofs << ",";		ofs << last.th << std::endl;
@@ -406,7 +409,7 @@ bool Configuration::get_C_free_obj(const std::vector<State3D<int>>& last_C_free_
 	// 	ofs << " " << "," << " " << "," << " " << std::endl;
 	// }
 	
-	// //================================================================================================
+	//================================================================================================
 
 	auto start = std::chrono::system_clock::now();
 	for(auto itr=clustered_C_free.begin(); itr != clustered_C_free.end();)
@@ -444,6 +447,7 @@ bool Configuration::get_C_free_obj(const std::vector<State3D<int>>& last_C_free_
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+	std::cout << "The size of C_free_obj is ";	std::cout << clustered_C_free.size() << std::endl;
 	// std::cout << "get_clustered_C_obj [ms] : ";	std::cout << sec << std::endl;
 
 	if(clustered_C_free.size() == 0){

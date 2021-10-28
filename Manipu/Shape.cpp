@@ -1,6 +1,7 @@
 #include "Shape.h"
 #include "LShape.h"
 #include "Rectangle.h"
+#include "Triangulus.h"
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
@@ -18,6 +19,7 @@ Shape* Shape::getInstance()
 	Shape* instance = nullptr;
 	bp::ptree pt;
 	read_ini("../config/ObjectParameter.ini", pt);
+
 	boost::optional<int> carrier = pt.get_optional<int>("target.shape");
 	int sh = carrier.get();
 	if(sh == 1){
@@ -25,6 +27,9 @@ Shape* Shape::getInstance()
 	}
 	else if(sh == 2){
 		instance = LShape::getInstance();
+	}
+	else if(sh == 3){
+		instance = Triangulus::getInstance();
 	}
 
 	return instance;
