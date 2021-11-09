@@ -114,29 +114,29 @@ void Configuration::get_C_free()
 ////////////////////////////////////////////////////////////////////////////
 // Confirm robot angle 
 // To execute visualize_by_vertex.py, validate below code and output to csv file.
-	std::string fn = "/mnt/c/Users/nakanishi/Desktop/dif.csv";
-	std::ofstream ofs(fn, std::ios::out);
-	std::string fn3 = "../robot_vertex.csv";
-	std::ofstream logR(fn3, std::ios::out);
-	if(cnt % 1 == 0){
-		for(int l=0; l<robot->Lhand.size(); ++l){
-			for(int i=0; i<robot->Lhand[l].geometry.vertices.size(); ++i){
-				logR << robot->Lhand[l].geometry.vertices[i].x;	logR << ",";
-				logR << robot->Lhand[l].geometry.vertices[i].y << std::endl;
-			}
-			logR << robot->Lhand[l].geometry.vertices[0].x; logR << ",";
-			logR << robot->Lhand[l].geometry.vertices[0].y << std::endl;
-		}
+	// std::string fn = "/mnt/c/Users/nakanishi/Desktop/dif.csv";
+	// std::ofstream ofs(fn, std::ios::out);
+	// std::string fn3 = "../robot_vertex.csv";
+	// std::ofstream logR(fn3, std::ios::out);
+	// if(cnt % 1 == 0){
+	// 	for(int l=0; l<robot->Lhand.size(); ++l){
+	// 		for(int i=0; i<robot->Lhand[l].geometry.vertices.size(); ++i){
+	// 			logR << robot->Lhand[l].geometry.vertices[i].x;	logR << ",";
+	// 			logR << robot->Lhand[l].geometry.vertices[i].y << std::endl;
+	// 		}
+	// 		logR << robot->Lhand[l].geometry.vertices[0].x; logR << ",";
+	// 		logR << robot->Lhand[l].geometry.vertices[0].y << std::endl;
+	// 	}
 		
-		for(int r=0; r<robot->Rhand.size(); ++r){
-			for(int i=0; i<robot->Rhand[r].geometry.vertices.size(); ++i){
-				logR << robot->Rhand[r].geometry.vertices[i].x;	logR <<  ",";
-				logR << robot->Rhand[r].geometry.vertices[i].y << std::endl;
-			}
-			logR << robot->Rhand[r].geometry.vertices[0].x; logR << ",";
-			logR << robot->Rhand[r].geometry.vertices[0].y << std::endl;
-		}
-	} 
+	// 	for(int r=0; r<robot->Rhand.size(); ++r){
+	// 		for(int i=0; i<robot->Rhand[r].geometry.vertices.size(); ++i){
+	// 			logR << robot->Rhand[r].geometry.vertices[i].x;	logR <<  ",";
+	// 			logR << robot->Rhand[r].geometry.vertices[i].y << std::endl;
+	// 		}
+	// 		logR << robot->Rhand[r].geometry.vertices[0].x; logR << ",";
+	// 		logR << robot->Rhand[r].geometry.vertices[0].y << std::endl;
+	// 	}
+	// } 
 ////////////////////////////////////////////////////////////////////////////////
 
 	//for(const auto& sp : space)

@@ -5,11 +5,14 @@
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/optional.hpp>
 
+
 namespace bp = boost::property_tree;
 
 LShape::LShape()
 	:long_side(0), short_side(0), long_pro(0), short_pro(0)
 {
+	symmetric_angle = 360;
+
 	bp::ptree pt;
 	read_ini("../config/ObjectParameter.ini", pt);
 

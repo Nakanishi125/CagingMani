@@ -9,7 +9,7 @@ namespace bp = boost::property_tree;
 Triangulus* Triangulus::instance = nullptr;
 
 Triangulus::Triangulus()
-    :e1(), e2(), e3(), geometry(), R()
+    :e1(), e2(), e3(), geometry(), R(), symmetric_angle(360)
 {
 	bp::ptree pt;
 	read_ini("../config/ObjectParameter.ini", pt);

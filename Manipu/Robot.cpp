@@ -4,6 +4,9 @@
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/optional.hpp>
 
+#include <string>
+#include <fstream>
+
 #include "Robot.h"
 
 namespace bp = boost::property_tree;
@@ -146,6 +149,45 @@ void Robot::HandSetup(Node& node)
 		center.x -= Rheight[r+1]*std::sin(radAngle);
 		center.y += Rheight[r+1]*std::cos(radAngle);
 	}
+
+	// std::string fn = "../vert.csv";
+	// std::ofstream ofs(fn,std::ios::out);
+	// for(int i=0; i<Lhand.size(); ++i){
+	// 	ofs << Lhand[i].geometry.vertices[0].x;
+	// 	ofs << ",";
+	// 	ofs << Lhand[i].geometry.vertices[0].y << std::endl;
+	// 	ofs << Lhand[i].geometry.vertices[1].x;
+	// 	ofs << ",";
+	// 	ofs << Lhand[i].geometry.vertices[1].y << std::endl;
+	// 	ofs << Lhand[i].geometry.vertices[2].x;
+	// 	ofs << ",";
+	// 	ofs << Lhand[i].geometry.vertices[2].y << std::endl;
+	// 	ofs << Lhand[i].geometry.vertices[3].x;
+	// 	ofs << ",";
+	// 	ofs << Lhand[i].geometry.vertices[3].y << std::endl;
+	// 	ofs << Lhand[i].geometry.vertices[0].x;
+	// 	ofs << ",";
+	// 	ofs << Lhand[i].geometry.vertices[0].y << std::endl << std::endl;
+	// }
+	// ofs << std::endl;
+	
+	// for(int i=0; i<Rhand.size(); ++i){
+	// 	ofs << Rhand[i].geometry.vertices[0].x;
+	// 	ofs << ",";
+	// 	ofs << Rhand[i].geometry.vertices[0].y << std::endl;
+	// 	ofs << Rhand[i].geometry.vertices[1].x;
+	// 	ofs << ",";
+	// 	ofs << Rhand[i].geometry.vertices[1].y << std::endl;
+	// 	ofs << Rhand[i].geometry.vertices[2].x;
+	// 	ofs << ",";
+	// 	ofs << Rhand[i].geometry.vertices[2].y << std::endl;
+	// 	ofs << Rhand[i].geometry.vertices[3].x;
+	// 	ofs << ",";
+	// 	ofs << Rhand[i].geometry.vertices[3].y << std::endl;
+	// 	ofs << Rhand[i].geometry.vertices[0].x;
+	// 	ofs << ",";
+	// 	ofs << Rhand[i].geometry.vertices[0].y << std::endl << std::endl;
+	// }
 
 }
 
