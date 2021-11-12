@@ -29,6 +29,7 @@ public:
 
 	std::vector<State3D<int>> space;
 	std::vector<State3D<int>> C_free_obj;
+	std::vector<std::vector<State3D<int>>> clustered_C_free;
 
 private:
 	State3D<int> top;
@@ -40,7 +41,6 @@ private:
 	Configuration();
 
 	std::vector<spaceinfo> C_free;
-	std::vector<std::vector<State3D<int>>> clustered_C_free;
 	
 	void merge();	
 

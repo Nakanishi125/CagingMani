@@ -25,7 +25,51 @@ Node nownode;
 RRT::RRT(Node start)
 	:Algorithm(start), range(1.0)
 {
-	graph.push_back(Start);
+	Start = start;
+	graph.push_back(start);
+}
+
+void RRT::Initialize()
+{
+	auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
+	std::srand(seed);
+
+	Robot* robot = Robot::getInstance();
+	Wall* wall = Wall::getInstance();
+	Configuration* config_ = Configuration::getInstance();
+
+	robot->Update(Start);
+	
+	if(robot->rrIntersect()){
+		std::cout << "robot-robot Intersection" << std::endl << std::endl;
+	}
+	if(robot->rwIntersect(wall)){
+		std::cout << "robot-wall Intersection" << std::endl << std::endl;
+	}
+
+	config_->get_C_free();
+	if(!config_->get_clustered_C_free()){
+		std::cout << "cluster false" << std::endl << std::endl;
+	}
+	if(!config_->get_C_free_ICS()){
+		std::cout << "ICS false" << std::endl << std::endl;
+	}
+
+	int num=0;
+	for(const auto& cls: config_->clustered_C_free){
+		std::cout << num;	std::cout << ":" << std::endl;
+		for(int i=0; i<cls.size(); ++i){
+			std::cout << "[";	std::cout << cls[i].x;	std::cout << ",";
+			std::cout << cls[i].y;	std::cout << ",";	std::cout << cls[i].th;	std::cout << "],";
+			if(i>5)	break;
+		}
+		std::cout << std::endl;
+		++num;
+	}
+
+	std::cout << "Select the cluster:";
+	std::cin >> num;
+	graph[0].region = config_->clustered_C_free[num];
 }
 
 void RRT::planning()
@@ -34,9 +78,9 @@ void RRT::planning()
 	static int all = 0;
 	static int real = 0;
 	GoalCondition* gc = ProblemFactory::create();
+	Configuration* config_ = Configuration::getInstance();
 
-	auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
-	std::srand(1234);
+	Initialize();
 
 	while(1){
 		++all;
@@ -99,8 +143,6 @@ void RRT::planning()
 			std::cout << "robot-wall Intersection" << std::endl << std::endl;
 			continue;
 		}
-
-		Configuration* config_ = Configuration::getInstance();
 
 		config_->get_C_free();
 		if(!config_->get_clustered_C_free()){

@@ -21,12 +21,13 @@ class RRT: public Algorithm
 {
 public:
     RRT(Node start);
+    std::vector<Node> graph;
 
 private:
-    std::vector<Node> graph;
     std::vector<Node> path;
     float range;
 
+    void Initialize();
     void planning();
     void WriteToFile();
 };

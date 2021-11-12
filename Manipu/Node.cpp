@@ -12,11 +12,11 @@ Node::Node(std::vector<double> Linit, std::vector<double> Rinit)
     dof = Ldof + Rdof;
     for(int i=0; i<Ldof; i++)   node.push_back(Linit[i]);
     for(int i=0; i<Rdof; i++)   node.push_back(Rinit[i]);
-    State3D<int> aa(150, 180, 310);
-	State3D<int> bb(160, 180, 310);
-	State3D<int> cc(170, 190, 320);
-	std::vector<State3D<int>> C = {aa, bb, cc};
-    region = C;
+    // State3D<int> aa(150, 180, 310);
+	// State3D<int> bb(160, 180, 310);
+	// State3D<int> cc(170, 190, 320);
+	// std::vector<State3D<int>> C = {aa, bb, cc};
+    // region = C;
 }
 
 Node::Node(std::vector<double> node_)
