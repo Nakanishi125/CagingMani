@@ -14,7 +14,7 @@ public:
     {
         GoalCondition* instance = nullptr;
         bp::ptree pt;
-        read_ini("../config/ProblemdefConfig.ini", pt);
+        read_ini("../config/ProblemDefine.ini", pt);
         boost::optional<int> carrier = pt.get_optional<int>("goal.mode");
         int mode = carrier.get();
         if(mode == 1){

@@ -13,7 +13,7 @@ public:
     :dest(), GoalCondition()
     {
         bp::ptree pt;
-	    read_ini("../config/ProblemdefConfig.ini", pt);
+	    read_ini("../config/ProblemDefine.ini", pt);
         boost::optional<double> carrier = pt.get_optional<double>("goal.ang1");
         dest.push_back(carrier.get());
         carrier = pt.get_optional<double>("goal.ang2");
@@ -28,7 +28,7 @@ public:
         dest.push_back(carrier.get());
     }
 
-    bool judge()
+    bool judge(int index)
     {
         static double mini = DBL_MAX;
         Configuration* config = Configuration::getInstance();

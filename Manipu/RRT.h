@@ -1,21 +1,8 @@
 #pragma once
 #include "Algorithm.h"
+#include "GoalCondition.h"
 #include "Configuration.h"
 
-
-// class RRT: public Algorithm
-// {
-// public:
-//     RRT(Node start, State3D<int> goal, double epsilon);
-
-// private:
-//     std::vector<Node> graph;
-//     std::vector<Node> path;
-//     float range;
-
-//     void planning();
-//     void WriteToFile();
-// };
 
 class RRT: public Algorithm
 {
@@ -24,9 +11,10 @@ public:
     std::vector<Node> graph;
 
 private:
+    GoalCondition* gc;
     std::vector<Node> path;
     float range;
-
+    void confirm(int signum, RRT* rrt);
     void Initialize();
     void planning();
     void WriteToFile();

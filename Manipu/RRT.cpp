@@ -6,19 +6,13 @@
 #include <chrono>
 #include <cstdlib>
 #include <fstream>
+#include <signal.h>
 
 #include "csv.hpp"
 #include "RRT.h"
 #include "ProblemFactory.h"
-#include "GoalCondition.h"
 
 using namespace std::chrono;
-
-// RRT::RRT(Node start, State3D<int> goal, double epsilon)
-// 	:Algorithm(start, goal, epsilon), range(1.0)
-// {
-// 	graph.push_back(Start);
-// }
 
 Node nownode;
 
@@ -27,6 +21,7 @@ RRT::RRT(Node start)
 {
 	Start = start;
 	graph.push_back(start);
+	gc = ProblemFactory::create();
 }
 
 void RRT::Initialize()
@@ -61,9 +56,9 @@ void RRT::Initialize()
 		for(int i=0; i<cls.size(); ++i){
 			std::cout << "[";	std::cout << cls[i].x;	std::cout << ",";
 			std::cout << cls[i].y;	std::cout << ",";	std::cout << cls[i].th;	std::cout << "],";
-			if(i>5)	break;
+			if(i>4)	break;
 		}
-		std::cout << std::endl;
+		std::cout << std::endl << std::endl;
 		++num;
 	}
 
@@ -72,15 +67,35 @@ void RRT::Initialize()
 	graph[0].region = config_->clustered_C_free[num];
 }
 
+// void RRT::confirm(int signum)
+// {
+// 	int index = gc->min_index;
+// 	std::vector<int> route;
+// 	while(1){
+// 		route.push_back(index);
+// 		index = graph[index].parent;
+// 		if(index == -1)	break;
+// 	}
+	
+// 	path.clear();
+// 	path.reserve(route.size());
+// 	for(int i=route.size()-1; i>=0; i--){
+// 		path.push_back(graph[route[i]]);
+// 	}
+
+// 	std::cout << "Generating the path in the middle of the process\n";
+// 	WriteToFile();
+// }
+
 void RRT::planning()
 {
 	auto start = std::chrono::system_clock::now();
 	static int all = 0;
 	static int real = 0;
-	GoalCondition* gc = ProblemFactory::create();
 	Configuration* config_ = Configuration::getInstance();
 
 	Initialize();
+	//signal(SIGINT, confirm);
 
 	while(1){
 		++all;
@@ -164,11 +179,10 @@ void RRT::planning()
 		graph.push_back(nownode);
 		std::cout << "The number of nodes is:";	std::cout << graph.size() << std::endl;
 
-		if(gc->judge())
+		if(gc->judge(real))
 			break;
 	}
 
-	delete gc;
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::seconds>(dur).count();
@@ -202,7 +216,7 @@ void RRT::planning()
 
 void RRT::WriteToFile()
 {
-	std::string fn = "../path/20211029_LShape.csv";
+	std::string fn = "../path/otameshi.csv";
 	std::ofstream ofs(fn, std::ios::out);
 
 	for(const auto& node: path){

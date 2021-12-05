@@ -14,10 +14,10 @@ int main()
 
 	std::vector<double> Linit = {-25, -15, -15};
   	std::vector<double> Rinit = {-80, 30, 80};
+	// std::vector<double> Linit = {40, -50, -30};
+  	// std::vector<double> Rinit = {40, -50, -30};
 
 	Node node(Linit,Rinit);
-	//std::vector<double> goal = {37, -22, -39, 21, -31, -27};
-	// State3D<int> goal(-100, 220, 0);
 
 	double epsilon = 20.0;
 

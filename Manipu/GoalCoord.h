@@ -12,7 +12,7 @@ public:
     :dest(), GoalCondition()
     {
         bp::ptree pt;
-	    read_ini("../config/ProblemdefConfig.ini", pt);
+	    read_ini("../config/ProblemDefine.ini", pt);
         boost::optional<int> carrier = pt.get_optional<int>("goal.coordx");
         dest.x = carrier.get();
         carrier = pt.get_optional<int>("goal.coordy");
@@ -21,16 +21,17 @@ public:
         dest.th = carrier.get();
     }
 
-    bool judge()
+    bool judge(int index)
     {
         static double mini = DBL_MAX;
         Configuration* config = Configuration::getInstance();
         double kyori = config->toGoal(dest);
         if(mini > kyori){
 			mini = kyori;
+            min_index = index;
 		}
 		std::cout << "Now, minimum distance is ";	std::cout << mini << std::endl << std::endl;
-        if(epsilon > kyori){
+        if(epsilon > mini){
             return true;
         }
         return false;

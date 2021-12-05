@@ -16,12 +16,13 @@ public:
     :epsilon()
     {
         bp::ptree pt;
-	    read_ini("../config/ProblemdefConfig.ini", pt);
+	    read_ini("../config/ProblemDefine.ini", pt);
         boost::optional<double> carrier = pt.get_optional<double>("goal.epsilon");
 	    epsilon = carrier.get();
     }
-    virtual bool judge() = 0;
+    virtual bool judge(int index) = 0;
 
 protected:
     double epsilon;
+    int min_index;      // for path generating when interrupting program
 };

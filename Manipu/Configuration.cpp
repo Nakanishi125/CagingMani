@@ -198,7 +198,7 @@ void Configuration::get_C_free()
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-	// std::cout << "get_C_free [ms]: ";	std::cout << sec <<std::endl;
+	std::cout << "get_C_free [ms]: ";	std::cout << sec <<std::endl;
 
 ////////////////////////////////////////////////////////
 // "Print C_free"
@@ -321,7 +321,7 @@ bool Configuration::get_clustered_C_free()
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
 	std::cout << "The size of clustered_C_free is ";	std::cout << clustered_C_free.size() << std::endl;
-	// std::cout << "get_clustered_C_free [ms]: ";	std::cout << sec <<std::endl;
+	std::cout << "get_clustered_C_free [ms]: ";	std::cout << sec <<std::endl;
 
 
 	return true;
@@ -377,7 +377,7 @@ bool Configuration::get_C_free_ICS()
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
 	std::cout << "The size of C_free_ICS is ";	std::cout << clustered_C_free.size() << std::endl;
-	// std::cout << "get_C_free_ICS [ms]: ";	std::cout << sec <<std::endl;
+	std::cout << "get_C_free_ICS [ms]: ";	std::cout << sec <<std::endl;
 
 	if( clustered_C_free.size() == 0){
 		clustered_C_free.clear();
@@ -448,7 +448,7 @@ bool Configuration::get_C_free_obj(const std::vector<State3D<int>>& last_C_free_
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
 	std::cout << "The size of C_free_obj is ";	std::cout << clustered_C_free.size() << std::endl;
-	// std::cout << "get_clustered_C_obj [ms] : ";	std::cout << sec << std::endl;
+	std::cout << "get_clustered_C_obj [ms] : ";	std::cout << sec << std::endl;
 
 	if(clustered_C_free.size() == 0){
 		std::cout << "The number of cluster is 0" <<std::endl;
@@ -793,9 +793,8 @@ void Configuration::modify_label(int num1, int num2, int*** label)
 
 double distance_of_centers(const Point2D point, const Link link)
 {
-	double rad = deg_to_rad(link.AbsAngle);
-	Point2D cen(link.refPoint.x + ( link.width*std::cos(rad) - link.height*std::sin(rad))/2 ,
-							link.refPoint.y + ( link.width*std::sin(rad) + link.height*std::cos(rad))/2);
+	Point2D cen((link.bottom_center.x+link.next_center.x)/2, 
+				(link.bottom_center.y+link.next_center.y)/2);
 	return cen.dist(point);
 }
 

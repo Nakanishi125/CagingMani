@@ -15,7 +15,7 @@ import math
 # In[60]:
 
 while(1):
-	Data = pd.read_csv("../../robot_vertex.csv", header=None)
+	Data = pd.read_csv("../../vert.csv", header=None)
 
 	lx = Data.iloc[:20,0]
 	ly = Data.iloc[:20,1]
@@ -41,7 +41,7 @@ while(1):
 
 	fig = plt.figure()
 	ax = fig.add_subplot(1,1,1)
-	ax.set(xlim=(-300,300),ylim=(-10,400))
+	ax.set(xlim=(-300,300),ylim=(-10,600))
 	ax.set_aspect('equal')
 
 	for i in range(len(lxlist)):
@@ -49,7 +49,9 @@ while(1):
 	for i in range(len(rxlist)):
 		ax.plot(rxlist[i], rylist[i])
 
-	plt.pause(2.0)
+	plt.show()
+	#plt.pause(2)
 	plt.close()
+
 
 	
