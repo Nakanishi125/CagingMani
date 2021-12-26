@@ -19,6 +19,9 @@ public:
         dest.y = carrier.get();
         carrier = pt.get_optional<int>("goal.coordt");
         dest.th = carrier.get();
+        // dest.x = goal.x;
+        // dest.y = goal.y;
+        // dest.th = goal.th;
     }
 
     bool judge(int index)

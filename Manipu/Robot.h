@@ -36,7 +36,5 @@ private:
 
 	static Robot* instance;
 
-	void RefSetting(std::vector<Link> &hand, Point2D org);
-
 };
 

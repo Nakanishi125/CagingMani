@@ -111,21 +111,16 @@ void Robot::HandSetup(Node& node)
 	// Root Link generating
 	double AbsAngle = 0.0;
 	Point2D center(Lorg);
-	//Point2D ref(center.x - 0.5*Lwidth[0] , center.y);
 	Link link0L(Lheight[0], Lwidth[0], AbsAngle, center, lmat);
 	Lhand.push_back(link0L);
-	//center.y += Lheight[0];
 
 	// each Link generating
 	for(int l=0; l<node.Ldof; l++)
 	{
 		AbsAngle += node.node[l];
 		double radAngle = deg_to_rad(AbsAngle);
-		//Point2D ref(center.x - 0.5*Lwidth[l+1]*cos(radAngle) , center.y - 0.5*Lwidth[l+1]*sin(radAngle));
 		Link link(Lheight[l+1], Lwidth[l+1] , AbsAngle, Lhand.back().next_center, lmat);
 		Lhand.push_back(link);
-		// center.x -= Lheight[l+1]*std::sin(radAngle);
-		// center.y += Lheight[l+1]*std::cos(radAngle);
 	}
 
 	// right	
@@ -134,105 +129,29 @@ void Robot::HandSetup(Node& node)
 	AbsAngle = 0.0;
 	Link link0R(Rheight[0], Rwidth[0], AbsAngle, center, rmat);
 	Rhand.push_back(link0R);
-	//center.y += Rheight[0];
 
 	// each Link generating
 	for(int r=0; r<node.Rdof; r++)
 	{
 		AbsAngle += node.node[r+node.Ldof];
 		double radAngle = deg_to_rad(AbsAngle);
-		//Point2D ref(center.x - 0.5*Rwidth[r+1]*std::cos(radAngle) , center.y - 0.5*Rwidth[r+1]*std::sin(radAngle) );
 		Link link(Rheight[r+1], Rwidth[r+1] , AbsAngle, Rhand.back().next_center, rmat);
 		Rhand.push_back(link);
-		// center.x -= Rheight[r+1]*std::sin(radAngle);
-		// center.y += Rheight[r+1]*std::cos(radAngle);
-	}
-
-
-
-	// AbsAngle = 0.0;
-	// center=Rorg;
-	// Point2D Rref(center.x - 0.5*Rwidth[0] , center.y);
-	// ref = Rref;
-	// Link link0R(Rheight[0], Rwidth[0], AbsAngle, ref, rmat);
-	// Rhand.push_back(link0R);
-	// center.y += Rheight[0];
-
-	// // each Link generating
-	// for(int r=0; r<node.Rdof; r++)
-	// {
-	// 	AbsAngle += node.node[r+node.Ldof];
-	// 	double radAngle = deg_to_rad(AbsAngle);
-	// 	Point2D ref(center.x - 0.5*Rwidth[r+1]*std::cos(radAngle) , center.y - 0.5*Rwidth[r+1]*std::sin(radAngle) );
-	// 	Link link(Rheight[r+1], Rwidth[r+1] , AbsAngle, ref, rmat);
-	// 	Rhand.push_back(link);
-	// 	center.x -= Rheight[r+1]*std::sin(radAngle);
-	// 	center.y += Rheight[r+1]*std::cos(radAngle);
-	// }
-
-	std::string fn = "../vert.csv";
-	std::ofstream ofs(fn,std::ios::out);
-	for(int i=0; i<Lhand.size(); ++i){
-		ofs << Lhand[i].geometry.vertices[0].x;
-		ofs << ",";
-		ofs << Lhand[i].geometry.vertices[0].y << std::endl;
-		ofs << Lhand[i].geometry.vertices[1].x;
-		ofs << ",";
-		ofs << Lhand[i].geometry.vertices[1].y << std::endl;
-		ofs << Lhand[i].geometry.vertices[2].x;
-		ofs << ",";
-		ofs << Lhand[i].geometry.vertices[2].y << std::endl;
-		ofs << Lhand[i].geometry.vertices[3].x;
-		ofs << ",";
-		ofs << Lhand[i].geometry.vertices[3].y << std::endl;
-		ofs << Lhand[i].geometry.vertices[0].x;
-		ofs << ",";
-		ofs << Lhand[i].geometry.vertices[0].y << std::endl;
-	}
-	
-	for(int i=0; i<Rhand.size(); ++i){
-		ofs << Rhand[i].geometry.vertices[0].x;
-		ofs << ",";
-		ofs << Rhand[i].geometry.vertices[0].y << std::endl;
-		ofs << Rhand[i].geometry.vertices[1].x;
-		ofs << ",";
-		ofs << Rhand[i].geometry.vertices[1].y << std::endl;
-		ofs << Rhand[i].geometry.vertices[2].x;
-		ofs << ",";
-		ofs << Rhand[i].geometry.vertices[2].y << std::endl;
-		ofs << Rhand[i].geometry.vertices[3].x;
-		ofs << ",";
-		ofs << Rhand[i].geometry.vertices[3].y << std::endl;
-		ofs << Rhand[i].geometry.vertices[0].x;
-		ofs << ",";
-		ofs << Rhand[i].geometry.vertices[0].y << std::endl;
 	}
 
 }
 
-// void Robot::RefSetting(std::vector<Link> &hand, Point2D org)
-// {
-// 	double AbsAngle = 0.0;
-// 	Point2D center(org);
-// 	for(int i=0; i<hand.size(); i++){
-// 		double radAngle = deg_to_rad(hand[i].AbsAngle);
-// 		Point2D ref(center.x - 0.5*hand[i].width*std::cos(radAngle), center.y - 0.5*hand[i].width*std::sin(radAngle));
-// 		hand[i].refPoint = ref;
-
-// 		center.x -= hand[i].height*std::sin(radAngle);
-// 		center.y += hand[i].height*std::cos(radAngle);
-// 	}
-// }
-
 
 void Robot::Update(Node& node)
 {
-	// Left hand
+// Left hand
 	double AbsAngle = 0.0;
 	Lhand[0].AbsAngle = AbsAngle;
 	// Root Link Update
+
 	Lhand[0].Update();
 	// Each Link Update
+
 	for(int i=0; i<Node::Ldof; i++){
 		AbsAngle += node.node[i];
 		Lhand[i+1].AbsAngle = AbsAngle;
@@ -240,22 +159,13 @@ void Robot::Update(Node& node)
 		Lhand[i+1].Update();
 	}
 
-	// double AbsAngle = 0.0;
-	// Lhand[0].AbsAngle = AbsAngle; 
-	// for(int i=0; i<Node::Ldof; i++){
-	// 	AbsAngle += node.node[i];
-	// 	Lhand[i+1].AbsAngle = AbsAngle;
-	// }
-	// RefSetting(Lhand, Lorg);
-
-	// for(int i=0; i<=node.Ldof; i++)
-	// 	Lhand[i].Update();
-
-	// Right hand
+// Right hand
 	AbsAngle = 0.0;
 	Rhand[0].AbsAngle = AbsAngle;
+
 	// Root Link Update
 	Rhand[0].Update();
+
 	// Each Link Update
 	for(int i=0; i<Node::Rdof; i++){
 		AbsAngle += node.node[node.Ldof+i];

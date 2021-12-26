@@ -15,7 +15,7 @@ import math
 # In[60]:
 
 while(1):
-	Data = pd.read_csv("../../vert.csv", header=None)
+	Data = pd.read_csv("../../robot_vertex.csv", header=None)
 
 	lx = Data.iloc[:20,0]
 	ly = Data.iloc[:20,1]

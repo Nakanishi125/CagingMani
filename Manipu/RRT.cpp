@@ -4,8 +4,6 @@
 #include <iomanip>
 #include <vector>
 #include <chrono>
-#include <cstdlib>
-#include <fstream>
 #include <signal.h>
 
 #include "csv.hpp"
@@ -22,13 +20,25 @@ RRT::RRT(Node start)
 	Start = start;
 	graph.push_back(start);
 	gc = ProblemFactory::create();
-}
 
-void RRT::Initialize()
+	// Below, file setting part
+	std::string fp = "../Path/" + getDatetimeStr() + ".csv";
+	file.open(fp, std::ios::app);
+
+	bp::ptree pt;
+	read_ini("../config/ObjectParameter.ini", pt);
+	boost::optional<int> carrier = pt.get_optional<int>("target.shape");
+	int sh = carrier.get();
+	if(sh == 1)	file << "Rectangle" << std::endl;
+	if(sh == 2) file << "LShape" << std::endl;
+	if(sh == 3)	file << "Triangle" << std::endl;
+
+	file << "Goal," << gc->goal.x << "," << gc->goal.y << "," << gc->goal.th << std::endl;
+	file << "epsilon," << gc->epsilon << std::endl;
+} 
+
+bool RRT::Initialize()
 {
-	auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
-	std::srand(seed);
-
 	Robot* robot = Robot::getInstance();
 	Wall* wall = Wall::getInstance();
 	Configuration* config_ = Configuration::getInstance();
@@ -37,17 +47,21 @@ void RRT::Initialize()
 	
 	if(robot->rrIntersect()){
 		std::cout << "robot-robot Intersection" << std::endl << std::endl;
+		return false;
 	}
 	if(robot->rwIntersect(wall)){
 		std::cout << "robot-wall Intersection" << std::endl << std::endl;
+		return false;
 	}
 
 	config_->get_C_free();
 	if(!config_->get_clustered_C_free()){
 		std::cout << "cluster false" << std::endl << std::endl;
+		return false;
 	}
 	if(!config_->get_C_free_ICS()){
 		std::cout << "ICS false" << std::endl << std::endl;
+		return false;
 	}
 
 	int num=0;
@@ -65,27 +79,9 @@ void RRT::Initialize()
 	std::cout << "Select the cluster:";
 	std::cin >> num;
 	graph[0].region = config_->clustered_C_free[num];
+	return true;
 }
 
-// void RRT::confirm(int signum)
-// {
-// 	int index = gc->min_index;
-// 	std::vector<int> route;
-// 	while(1){
-// 		route.push_back(index);
-// 		index = graph[index].parent;
-// 		if(index == -1)	break;
-// 	}
-	
-// 	path.clear();
-// 	path.reserve(route.size());
-// 	for(int i=route.size()-1; i>=0; i--){
-// 		path.push_back(graph[route[i]]);
-// 	}
-
-// 	std::cout << "Generating the path in the middle of the process\n";
-// 	WriteToFile();
-// }
 
 void RRT::planning()
 {
@@ -94,8 +90,13 @@ void RRT::planning()
 	static int real = 0;
 	Configuration* config_ = Configuration::getInstance();
 
-	Initialize();
-	//signal(SIGINT, confirm);
+	auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
+	std::srand(seed);
+	std::cout << "Seed value is " << seed << std::endl;
+	if(!Initialize()){
+		std::cout << "Invalid initial value was given." << std::endl;
+		return ;
+	}
 
 	while(1){
 		++all;
@@ -205,31 +206,110 @@ void RRT::planning()
 	}
 	std::cout << std::endl << "Complete generating path!!" << std::endl;
 
+	std::cout << "Seed value is " << seed << std::endl; 
 	std::cout << "all:";	std::cout << all << std::endl;
 	std::cout << "real:";	std::cout << real << std::endl;
 	std::cout << "Rate is ";	std::cout << (100.0*real)/all;	std::cout << " (%)" << std::endl;
 
 	std::string manilog = "../manipulationLog.txt";
 	std::ofstream log(manilog, std::ios::app);
-	log << getDatetimeStr();	log << "　";	log << "CalcTime:";	log << sec;	log << "[s]　";	log << "HitRate:";	log << (100.0*real)/all; log << "[%]" << std::endl;
+	log << getDatetimeStr();	log << "　";	log << "CalcTime:";	log << sec;	log << "[s]　"; log << "Seed:" << seed << "　";	log << "HitRate:";	log << (100.0*real)/all; log << "[%]" << std::endl;
 }
 
 void RRT::WriteToFile()
 {
-	std::string fn = "../path/otameshi.csv";
-	std::ofstream ofs(fn, std::ios::out);
-
 	for(const auto& node: path){
 		for(int i=0; i<Node::dof; i++){
 			if(i == Node::dof - 1){
-				ofs << node.node[i] << std::endl;
+				file << node.node[i] << std::endl;
 			}
 			else{
-				ofs << node.node[i];	ofs << ",";
+				file << node.node[i] << ",";
 			}
 		}
 	}
 
+}
+
+void RRT::Debug()
+{
+	std::string fn = "";
+	std::cout << "Input filename for debug -> ";
+	std::cin >> fn;
+	fn = "../Path/" + fn;
+	std::ifstream ifs(fn);
+	std::vector<double> Ini;
+	std::string val;
+	getline(ifs, val);
+	std::string tmp = "";
+	std::istringstream stream(val);
+	while(getline(stream, tmp, ',')){
+		Ini.push_back(stod(tmp));
+	}
+	Start = Ini;
+	Start.parent = -1;
+
+	static int all = 0;
+	static int real = 0;
+	Configuration* config_ = Configuration::getInstance();
+
+	Initialize();
+
+	while(getline(ifs, val)){
+		std::vector<double> Next;
+		std::string tmp = "";
+		std::istringstream stream(val);
+		while(getline(stream, tmp, ',')){
+			Next.push_back(stod(tmp));
+		}
+		nownode.Update(Next);
+
+		// Output to console
+		for(int i=0; i<nownode.dof; ++i){
+			std::cout << nownode.node[i];
+			std::cout << ", ";
+		}
+		std::cout << std::endl;
+
+		//　ノードの妥当性判定処理
+		Robot* robot = Robot::getInstance();
+		Wall* wall = Wall::getInstance();
+
+		robot->Update(nownode);
+		
+		if(robot->rrIntersect()){
+			std::cout << "robot-robot Intersection" << std::endl << std::endl;
+			continue;
+		}
+		if(robot->rwIntersect(wall)){
+			std::cout << "robot-wall Intersection" << std::endl << std::endl;
+			continue;
+		}
+
+		config_->get_C_free();
+		if(!config_->get_clustered_C_free()){
+			std::cout << "cluster false" << std::endl << std::endl;
+			continue;
+		}
+		if(!config_->get_C_free_ICS()){
+			std::cout << "ICS false" << std::endl << std::endl;
+			continue;
+		}
+		if(!config_->get_C_free_obj(graph[nownode.parent].region)){
+			std::cout << "free_obj false" << std::endl << std::endl;
+			continue;
+		}
+		nownode.region = config_->C_free_obj;
+		++real;
+
+		// グラフに今回のノードを追加
+		graph.push_back(nownode);
+		std::cout << "The number of nodes is:";	std::cout << graph.size() << std::endl;
+
+		if(gc->judge(real))
+			break;
+
+	}
 }
 
 std::string getDatetimeStr() 

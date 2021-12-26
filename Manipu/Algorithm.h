@@ -13,5 +13,6 @@ private:
 
 public:
 	void GeneratePath();
+	virtual void Debug() = 0;
 	virtual void WriteToFile() = 0;
 };

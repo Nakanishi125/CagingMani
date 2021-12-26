@@ -1,4 +1,8 @@
 #pragma once
+
+#include <cstdlib>
+#include <fstream>
+
 #include "Algorithm.h"
 #include "GoalCondition.h"
 #include "Configuration.h"
@@ -14,8 +18,10 @@ private:
     GoalCondition* gc;
     std::vector<Node> path;
     float range;
-    void confirm(int signum, RRT* rrt);
-    void Initialize();
+    std::ofstream file;
+
+    bool Initialize();
+    void Debug();
     void planning();
     void WriteToFile();
 };

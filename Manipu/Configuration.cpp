@@ -114,8 +114,6 @@ void Configuration::get_C_free()
 ////////////////////////////////////////////////////////////////////////////
 // Confirm robot angle 
 // To execute visualize_by_vertex.py, validate below code and output to csv file.
-	// std::string fn = "/mnt/c/Users/nakanishi/Desktop/dif.csv";
-	// std::ofstream ofs(fn, std::ios::out);
 	// std::string fn3 = "../robot_vertex.csv";
 	// std::ofstream logR(fn3, std::ios::out);
 	// if(cnt % 1 == 0){
@@ -138,7 +136,8 @@ void Configuration::get_C_free()
 	// 	}
 	// } 
 ////////////////////////////////////////////////////////////////////////////////
-
+	// std::string fn1 = "/mnt/c/Users/nakanishi/Desktop/clust.csv";
+	// std::ofstream ofs1(fn1, std::ios::out);
 	//for(const auto& sp : space)
 	for(int num=0; num <space.size(); num++)
 	{
@@ -153,7 +152,7 @@ void Configuration::get_C_free()
 			if(AnyCollision){
 				//std::cout << "The object collide with wall" << std::endl;
 				C_free[num].flag = false;
-				// ofs << 0 << std::endl;
+				//ofs1 << space[num].x << "," << space[num].y << "," << space[num].th << std::endl;
 				continue;
 			}
 		}
@@ -170,7 +169,7 @@ void Configuration::get_C_free()
 				if(AnyCollision){
 					//std::cout << "The object collide with left hand" << std::endl;
 					C_free[num].flag = false;
-					// ofs << 0 << std::endl;
+					//ofs1 << space[num].x << "," << space[num].y << "," << space[num].th << std::endl;
 				}
 			}
 		}
@@ -186,12 +185,12 @@ void Configuration::get_C_free()
 				if(AnyCollision){
 					//std::cout << "The object collide with right hand" << std::endl;
 					C_free[num].flag = false;
-					// ofs << 0 << std::endl;
+					//ofs1 << space[num].x << "," << space[num].y << "," << space[num].th << std::endl;
 				}
 			}
 		}
 		if(!C_free[num].flag)	continue;
-		// ofs << 1 << std::endl;
+		//ofs1 << space[num].x << "," << space[num].y << "," << space[num].th << std::endl;
 	}
 
 
@@ -199,42 +198,6 @@ void Configuration::get_C_free()
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
 	std::cout << "get_C_free [ms]: ";	std::cout << sec <<std::endl;
-
-////////////////////////////////////////////////////////
-// "Print C_free"
-/*
-	if(cnt % 1 == 0){
-	std::string fn = "../log/C_freex.txt";
-	std::string fn2 = "../log/C_freey.txt";
-	std::ofstream log(fn, std::ios::out);
-	std::ofstream log2(fn2, std::ios::out);
-	int tmpx = -1000;
-	int tmpy = -1000;
-	for(int i=0; i<C_free.size(); ++i){
-		if(tmpx != C_free[i].x || tmpy != C_free[i].y){
-			log << C_free[i].x;	log << " ";
-			tmpx = C_free[i].x;
-			tmpy = C_free[i].y;
-		}
-	}
-	tmpx = -1000;
-	tmpy = -1000;
-	for(int i=0; i<C_free.size(); ++i){
-		if(tmpx != C_free[i].x || tmpy != C_free[i].y){
-			log2 << C_free[i].y;	log2 << " ";
-			tmpx = C_free[i].x;
-			tmpy = C_free[i].y;
-		}
-	}
-	}
-	++cnt;
-//	for(int i=0; i<C_free.size(); ++i){
-//		std::cout << C_free[i].x;	std::cout <<",";
-//		std::cout << C_free[i].y << std::endl;
-//	}
-*/
-//////////////////////////////////////////////////////////
-
 }	
 
 
@@ -357,22 +320,6 @@ bool Configuration::get_C_free_ICS()
 
 	}
 
-	// marge 0 with 360 deg
-//	int tmpx = -50;
-//	int tmpy = -50;
-//	std::cout << std::endl << "clustered_C_free:" << std::endl;
-//	for(int i=0; i<clustered_C_free.size(); ++i){
-//		for(int j=0; j<clustered_C_free[i].size(); j++){
-//			if(tmpx!=clustered_C_free[i][j].x || tmpy!=clustered_C_free[i][j].y){
-//				std::cout << clustered_C_free[i][j].x;	std::cout << ",";
-//				std::cout << clustered_C_free[i][j].y << std::endl;
-//				tmpx = clustered_C_free[i][j].x;	tmpy = clustered_C_free[i][j].y;
-//			}
-//		}
-//		std::cout << std::endl;
-//	}
-
-
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
 	auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
@@ -394,23 +341,6 @@ bool Configuration::get_C_free_ICS()
 
 bool Configuration::get_C_free_obj(const std::vector<State3D<int>>& last_C_free_obj)
 {
-	//=================================================================================================
-
-	// std::string fn = "../C_free_obj.csv";
-	// std::ofstream ofs(fn, std::ios::out);
-	// for(const auto& last: last_C_free_obj){
-	// 	ofs << last.x;	ofs << ",";	ofs << last.y;	ofs << ",";		ofs << last.th << std::endl;
-	// }
-	// ofs << " " << "," << " " << "," << " " << std::endl;
-	// for(const auto& cc: clustered_C_free){
-	// 	for(const auto& last: cc){
-	// 		ofs << last.x;	ofs << ",";	ofs << last.y;	ofs << ",";		ofs << last.th << std::endl;
-	// 	}
-	// 	ofs << " " << "," << " " << "," << " " << std::endl;
-	// }
-	
-	//================================================================================================
-
 	auto start = std::chrono::system_clock::now();
 	for(auto itr=clustered_C_free.begin(); itr != clustered_C_free.end();)
 	{
@@ -437,12 +367,6 @@ bool Configuration::get_C_free_obj(const std::vector<State3D<int>>& last_C_free_
 		}
 	
 	}
-
-	// for(const auto& cls: clustered_C_free){
-	// 	for(const auto& obj: cls){
-	// 	ofs << obj.x;	ofs << ",";	ofs << obj.y;	ofs << ",";		ofs << obj.th << std::endl;
-	// 	}
-	// }
 
 	auto end = std::chrono::system_clock::now();
 	auto dur = end - start;
@@ -797,19 +721,3 @@ double distance_of_centers(const Point2D point, const Link link)
 				(link.bottom_center.y+link.next_center.y)/2);
 	return cen.dist(point);
 }
-
-
-// arma::mat vec_to_arma(std::vector<State3D<int>> vec)
-// {	
-// 	arma::mat arma(3, vec.size(), arma::fill::zeros);
-// 	for(size_t i=0; i<vec.size(); ++i)
-// 	{
-// 		arma(0, i) = vec[i].x;
-// 		arma(1, i) = vec[i].y;
-// 		arma(2, i) = vec[i].th;
-// 	}
-	
-// 	return arma;
-// }
-
-

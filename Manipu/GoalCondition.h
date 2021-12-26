@@ -12,6 +12,9 @@ namespace bp = boost::property_tree;
 class GoalCondition
 {
 public:
+    double epsilon;
+    State3D<int> goal;
+
     GoalCondition()
     :epsilon()
     {
@@ -19,10 +22,15 @@ public:
 	    read_ini("../config/ProblemDefine.ini", pt);
         boost::optional<double> carrier = pt.get_optional<double>("goal.epsilon");
 	    epsilon = carrier.get();
+        carrier = pt.get_optional<int>("goal.coordx");
+        goal.x = carrier.get();
+        carrier = pt.get_optional<int>("goal.coordy");
+        goal.y = carrier.get();
+        carrier = pt.get_optional<int>("goal.coordt");
+        goal.th = carrier.get();
     }
     virtual bool judge(int index) = 0;
 
 protected:
-    double epsilon;
     int min_index;      // for path generating when interrupting program
 };
