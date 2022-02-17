@@ -20,21 +20,6 @@ RRT::RRT(Node start)
 	Start = start;
 	graph.push_back(start);
 	gc = ProblemFactory::create();
-
-	// Below, file setting part
-	std::string fp = "../Path/" + getDatetimeStr() + ".csv";
-	file.open(fp, std::ios::app);
-
-	bp::ptree pt;
-	read_ini("../config/ObjectParameter.ini", pt);
-	boost::optional<int> carrier = pt.get_optional<int>("target.shape");
-	int sh = carrier.get();
-	if(sh == 1)	file << "Rectangle" << std::endl;
-	if(sh == 2) file << "LShape" << std::endl;
-	if(sh == 3)	file << "Triangle" << std::endl;
-
-	file << "Goal," << gc->goal.x << "," << gc->goal.y << "," << gc->goal.th << std::endl;
-	file << "epsilon," << gc->epsilon << std::endl;
 } 
 
 bool RRT::Initialize()
@@ -152,25 +137,25 @@ void RRT::planning()
 		robot->Update(nownode);
 		
 		if(robot->rrIntersect()){
-			std::cout << "robot-robot Intersection" << std::endl << std::endl;
+			std::cout << "    robot-robot Intersection" << std::endl << std::endl;
 			continue;
 		}
 		if(robot->rwIntersect(wall)){
-			std::cout << "robot-wall Intersection" << std::endl << std::endl;
+			std::cout << "    robot-wall Intersection" << std::endl << std::endl;
 			continue;
 		}
 
 		config_->get_C_free();
 		if(!config_->get_clustered_C_free()){
-			std::cout << "cluster false" << std::endl << std::endl;
+			std::cout << "    cluster false" << std::endl << std::endl;
 			continue;
 		}
 		if(!config_->get_C_free_ICS()){
-			std::cout << "ICS false" << std::endl << std::endl;
+			std::cout << "    ICS false" << std::endl << std::endl;
 			continue;
 		}
 		if(!config_->get_C_free_obj(graph[nownode.parent].region)){
-			std::cout << "free_obj false" << std::endl << std::endl;
+			std::cout << "    free_obj false" << std::endl << std::endl;
 			continue;
 		}
 		nownode.region = config_->C_free_obj;
@@ -178,7 +163,7 @@ void RRT::planning()
 
 		// グラフに今回のノードを追加
 		graph.push_back(nownode);
-		std::cout << "The number of nodes is:";	std::cout << graph.size() << std::endl;
+		std::cout << "    The number of nodes is:";	std::cout << graph.size() << std::endl;
 
 		if(gc->judge(real))
 			break;
@@ -211,13 +196,33 @@ void RRT::planning()
 	std::cout << "real:";	std::cout << real << std::endl;
 	std::cout << "Rate is ";	std::cout << (100.0*real)/all;	std::cout << " (%)" << std::endl;
 
-	std::string manilog = "../manipulationLog.txt";
+	std::string manilog = "../Manipulation_Log.txt";
 	std::ofstream log(manilog, std::ios::app);
-	log << getDatetimeStr();	log << "　";	log << "CalcTime:";	log << sec;	log << "[s]　"; log << "Seed:" << seed << "　";	log << "HitRate:";	log << (100.0*real)/all; log << "[%]" << std::endl;
+
+	log << getDatetimeStr() << std::endl;	
+	log << "    Calculation time -> " << sec << "[s]" << std::endl;	
+	log << "    Seed -> " << seed << std::endl;	
+	log << "    HitRate -> " << (100.0*real)/all; log << "[%]\n\n\n";
 }
 
 void RRT::WriteToFile()
 {
+	// file setting part
+	std::string fp = "../Path/" + getDatetimeStr() + ".csv";
+	file.open(fp, std::ios::app);
+
+	bp::ptree pt;
+	read_ini("../config/ObjectParameter.ini", pt);
+	boost::optional<int> carrier = pt.get_optional<int>("target.shape");
+	int sh = carrier.get();
+	if(sh == 1)	file << "#,Rectangle" << std::endl;
+	if(sh == 2) file << "#,LShape" << std::endl;
+	if(sh == 3)	file << "#,Triangle" << std::endl;
+
+	file << "#,Goal," << gc->goal.x << "," << gc->goal.y << "," << gc->goal.th << std::endl;
+	file << "#,epsilon," << gc->epsilon << std::endl;
+
+
 	for(const auto& node: path){
 		for(int i=0; i<Node::dof; i++){
 			if(i == Node::dof - 1){
@@ -240,12 +245,16 @@ void RRT::Debug()
 	std::ifstream ifs(fn);
 	std::vector<double> Ini;
 	std::string val;
-	getline(ifs, val);
+
+	do{
+		getline(ifs, val);
+	}while(val[0] == '#');
 	std::string tmp = "";
 	std::istringstream stream(val);
 	while(getline(stream, tmp, ',')){
 		Ini.push_back(stod(tmp));
 	}
+
 	Start = Ini;
 	Start.parent = -1;
 
@@ -263,6 +272,19 @@ void RRT::Debug()
 			Next.push_back(stod(tmp));
 		}
 		nownode.Update(Next);
+
+		// 最近傍ノードを探索
+		double dist = DBL_MAX;
+		int nearest_index = -1;
+		for(int i=0; i<(int)(graph.size()); ++i)
+		{
+			double tmp = nownode.distance(graph[i]);
+			if(dist > tmp){
+				nearest_index = i;
+				dist = tmp;
+			}
+		}
+		nownode.parent = nearest_index;
 
 		// Output to console
 		for(int i=0; i<nownode.dof; ++i){
@@ -317,12 +339,12 @@ std::string getDatetimeStr()
     time_t t = time(nullptr);
     const tm* localTime = localtime(&t);
     std::stringstream s;
-    s << "20" << localTime->tm_year - 100;
+    s << "20" << localTime->tm_year - 100 << "-";
     // setw(),setfill()で0詰め
-    s << std::setw(2) << std::setfill('0') << localTime->tm_mon + 1;
-    s << std::setw(2) << std::setfill('0') << localTime->tm_mday;
-    s << std::setw(2) << std::setfill('0') << localTime->tm_hour;
-    s << std::setw(2) << std::setfill('0') << localTime->tm_min;
+    s << std::setw(2) << std::setfill('0') << localTime->tm_mon + 1 << "-";
+    s << std::setw(2) << std::setfill('0') << localTime->tm_mday << "-";
+    s << std::setw(2) << std::setfill('0') << localTime->tm_hour << "-";
+    s << std::setw(2) << std::setfill('0') << localTime->tm_min << "-";
     s << std::setw(2) << std::setfill('0') << localTime->tm_sec;
     // std::stringにして値を返す
     return s.str();

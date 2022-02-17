@@ -33,7 +33,7 @@ public:
 			mini = kyori;
             min_index = index;
 		}
-		std::cout << "Now, minimum distance is ";	std::cout << mini << std::endl << std::endl;
+		std::cout << "    Temporary minimum distance: ";	std::cout << mini << std::endl << std::endl;
         if(epsilon > mini){
             return true;
         }

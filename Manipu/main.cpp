@@ -12,8 +12,8 @@ int main()
 	Wall* wall = Wall::getInstance();
 	Shape* obj = Shape::getInstance();
 
-	std::vector<double> Linit = {51.2084,-56.2177,-56.6532};
-  	std::vector<double> Rinit = {2.75219,5.9025,50.7668};
+	std::vector<double> Linit = {-25, -15, -15};
+  	std::vector<double> Rinit = {-80, 30, 80};
 	// std::vector<double> Linit = {40, -50, -30};
   	// std::vector<double> Rinit = {40, -50, -30};
 
