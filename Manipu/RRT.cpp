@@ -76,6 +76,7 @@ void RRT::planning()
 	Configuration* config_ = Configuration::getInstance();
 
 	auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
+	seed = 88000;
 	std::srand(seed);
 	std::cout << "Seed value is " << seed << std::endl;
 	if(!Initialize()){
@@ -86,22 +87,12 @@ void RRT::planning()
 	while(1){
 		++all;
 		std::cout << "No.";	std::cout << all << std::endl;
+
 		// ランダムに点を打つ
 		std::vector<double> Rand(Node::dof);
-		if(all%1 == 0){
-			// auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
-			// std::srand(seed);
-			for(int i=0; i<Node::dof; i++){
-				// auto seed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() % 100000;
-				// std::srand(seed);	
-				Rand[i] = std::rand()%181 - 90;
-			}
+		for(int i=0; i<Node::dof; i++){	
+			Rand[i] = std::rand()%181 - 90;
 		}
-		else{
-		// 	std::cout << "Goal Bias this time" << std::endl;
-		// 	Rand = dynamic_cast<GoalAngle*>(gc)->dest;
-		}
-
 		nownode.Update(Rand);
 
 		// 最近傍ノードを探索
@@ -131,6 +122,16 @@ void RRT::planning()
 		std::cout << std::endl;
 		
 		//　ノードの妥当性判定処理
+		// last_C_free_objのノードの中からC_freeのものを探す
+		for(const auto& cent: graph[nownode.parent].region){
+			if(!config_->check_C_free(cent))	continue;
+
+		}
+
+
+
+
+
 		Robot* robot = Robot::getInstance();
 		Wall* wall = Wall::getInstance();
 
@@ -199,7 +200,7 @@ void RRT::planning()
 	std::string manilog = "../Manipulation_Log.txt";
 	std::ofstream log(manilog, std::ios::app);
 
-	log << getDatetimeStr() << std::endl;	
+	log << getDatetimeStr() << ".csv" << std::endl;	
 	log << "    Calculation time -> " << sec << "[s]" << std::endl;	
 	log << "    Seed -> " << seed << std::endl;	
 	log << "    HitRate -> " << (100.0*real)/all; log << "[%]\n\n\n";
@@ -344,8 +345,8 @@ std::string getDatetimeStr()
     s << std::setw(2) << std::setfill('0') << localTime->tm_mon + 1 << "-";
     s << std::setw(2) << std::setfill('0') << localTime->tm_mday << "-";
     s << std::setw(2) << std::setfill('0') << localTime->tm_hour << "-";
-    s << std::setw(2) << std::setfill('0') << localTime->tm_min << "-";
-    s << std::setw(2) << std::setfill('0') << localTime->tm_sec;
+    s << std::setw(2) << std::setfill('0') << localTime->tm_min;
+//    s << std::setw(2) << std::setfill('0') << localTime->tm_sec;
     // std::stringにして値を返す
     return s.str();
 }

@@ -49,6 +49,11 @@ public:
 		y = 0;
 		th = 0;
 	}
+	// State3D(State3D s3d){
+	// 	x = s3d.x;
+	// 	y = s3d.y;
+	// 	th = s3d.th;
+	// }
 	
 	State3D& operator=(const State3D& s){
 		this->x = s.x;	this->y = s.y;	this->th = s.th;	return *this;

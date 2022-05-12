@@ -9,9 +9,17 @@
 
 using StateIte = std::vector<std::vector<State3D<int>>::iterator>;
 
-struct spaceinfo{
+class spaceinfo{
+public:
 	State3D<int> coord;
-	bool flag;
+	bool flag;		// true -> Valid, false -> Collision, Invalid
+
+	spaceinfo()
+		: coord(), flag(true)
+		{}
+	spaceinfo(State3D<int> cd)
+		: coord(cd), flag(true)
+		{}
 };
 
 class Configuration
@@ -19,6 +27,7 @@ class Configuration
 public:
 	static Configuration* getInstance();
 
+	bool check_C_free(State3D<int> pos);
 	void get_C_free();
 	bool get_clustered_C_free();
 	bool get_C_free_ICS();

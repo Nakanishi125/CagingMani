@@ -97,6 +97,56 @@ Configuration* Configuration::getInstance()
 	return instance;
 }
 
+bool Configuration::check_C_free(State3D<int> pos)
+{
+	Robot* robot = Robot::getInstance();
+	Shape* shape = Shape::getInstance();
+	Wall* wall   = Wall::getInstance();
+
+	bool AnyCollision = true;
+	shape->setCenterpoint(pos);
+
+	// Intersection judge aginst wall
+	if(pos.y <= shape->getRadius()){
+		AnyCollision = shape->Intersect(wall->geometry);
+		if(AnyCollision){
+			//std::cout << "The object collide with wall" << std::endl;
+			return false;
+		}
+	}
+
+	Point2D proj(pos.x, pos.y);
+
+	// Intersection judge against left hand
+	for(int l=0; l<robot->Lhand.size(); ++l)
+	{
+		double distance = distance_of_centers(proj, robot->Lhand[l]);
+		if(distance < (robot->Lhand[l].getRadius() + shape->getRadius()) )
+		{
+			AnyCollision = shape->Intersect(robot->Lhand[l].geometry);
+			if(AnyCollision){
+				//std::cout << "The object collide with left hand" << std::endl;
+				return false;
+			}
+		}
+	}
+
+	// Intersection judge against right hand
+	for(int r=0; r<robot->Rhand.size(); ++r)
+	{
+		double distance = distance_of_centers(proj, robot->Rhand[r]);
+		if(distance < (robot->Rhand[r].getRadius() + shape->getRadius()) )
+		{
+			AnyCollision = shape->Intersect(robot->Rhand[r].geometry);
+			if(AnyCollision){
+				//std::cout << "The object collide with right hand" << std::endl;
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
 
 void Configuration::get_C_free()
 {
@@ -109,7 +159,7 @@ void Configuration::get_C_free()
 
 	static int cnt = 1;
 
-	C_free.resize(space.size());
+	C_free.resize(space.size());	// For speed up
 
 ////////////////////////////////////////////////////////////////////////////
 // Confirm robot angle 
@@ -136,9 +186,7 @@ void Configuration::get_C_free()
 	// 	}
 	// } 
 ////////////////////////////////////////////////////////////////////////////////
-	// std::string fn1 = "/mnt/c/Users/nakanishi/Desktop/clust.csv";
-	// std::ofstream ofs1(fn1, std::ios::out);
-	//for(const auto& sp : space)
+
 	for(int num=0; num <space.size(); num++)
 	{
 		C_free[num].coord = space[num];
@@ -152,13 +200,12 @@ void Configuration::get_C_free()
 			if(AnyCollision){
 				//std::cout << "The object collide with wall" << std::endl;
 				C_free[num].flag = false;
-				//ofs1 << space[num].x << "," << space[num].y << "," << space[num].th << std::endl;
 				continue;
 			}
 		}
 
 		Point2D proj(space[num].x, space[num].y);
-		
+
 		// Intersection judge against left hand
 		for(int l=0; l<robot->Lhand.size(); ++l)
 		{
@@ -169,7 +216,6 @@ void Configuration::get_C_free()
 				if(AnyCollision){
 					//std::cout << "The object collide with left hand" << std::endl;
 					C_free[num].flag = false;
-					//ofs1 << space[num].x << "," << space[num].y << "," << space[num].th << std::endl;
 				}
 			}
 		}
@@ -185,12 +231,10 @@ void Configuration::get_C_free()
 				if(AnyCollision){
 					//std::cout << "The object collide with right hand" << std::endl;
 					C_free[num].flag = false;
-					//ofs1 << space[num].x << "," << space[num].y << "," << space[num].th << std::endl;
 				}
 			}
 		}
 		if(!C_free[num].flag)	continue;
-		//ofs1 << space[num].x << "," << space[num].y << "," << space[num].th << std::endl;
 	}
 
 
@@ -218,6 +262,7 @@ bool Configuration::get_clustered_C_free()
 	}
 
 	int clust = labeling3D(label);
+
 	clustered_C_free.resize(clust);
 	for(int i=0; i<clust; i++)	clustered_C_free[i].reserve(space.size());
 	for(int i=0; i<widx; i++){
@@ -545,7 +590,6 @@ int Configuration::labeling3D(int*** label)
 				label[indx][indy][indth] = 0;
 			}
 		
-	
 	// Labeling
 	int count = 0;
 	for(int x = bottom.x; x <= top.x; x = x + range_x)
@@ -562,7 +606,7 @@ int Configuration::labeling3D(int*** label)
 						label[indx][indy][indth] = clust;
 				}
 			}
-		
+
 	// Integrating	
 	int new_count = 0;
 	if(count > 0){
@@ -578,7 +622,7 @@ int Configuration::labeling3D(int*** label)
 							modify_label(clust, label[indx][indy][indth], label);
 					}
 				}
-				
+	
 		// Ordering	
 		for(int x = bottom.x; x <= top.x; x = x + range_x)
 			for(int y = bottom.y; y <= top.y; y = y + range_y)
@@ -590,9 +634,7 @@ int Configuration::labeling3D(int*** label)
 						new_count++;
 						modify_label(label[indx][indy][indth], new_count, label);
 					}
-				}
-			
-		
+				}	
 	}
 
 	return new_count;
